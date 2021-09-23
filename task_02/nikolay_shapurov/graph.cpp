@@ -1,11 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-using namespace std;
 
 int main(){
     int n, m, a, b;
-    cin >> n >> m;
+    std::cin >> n >> m;
     //N - quantity of vertices, M - quantity of edges
     int graph[n][n];
     for (int i = 0; i < n; i++){
@@ -14,17 +13,17 @@ int main(){
         }
     }
     for (int i = 0; i < m; i++){
-        cin >> a >> b;
+        std::cin >> a >> b;
         graph[a][b] = i;
         graph[b][a] = i;
     }
-    cout << endl;
+    std::cout << std::endl;
 
     //DNS to understand if the graph is connected or not
     bool visited[n];
     for (int i = 0; i < n; i++) visited[i] = 0;
     int root = 0;
-    vector <int> stack;
+    std::vector <int> stack;
     stack.push_back(root);
     while (stack.begin() != stack.end()){
         int now = stack[stack.size() - 1];
@@ -42,7 +41,7 @@ int main(){
 
     for (int i = 0; i < n; i++)
         if (visited[i] == 0){
-            cout << "disconnected graph";
+            std::cout << "disconnected graph";
             break;
         }
 
@@ -58,14 +57,14 @@ int main(){
 
     */
 
-    ofstream fout;
+    std::ofstream fout;
     fout.open("output.json");
 
     fout << "{\n    \"vertices\": [\n";
     int edges[m][2];
     //for (int i = 0; i < m; i++) { edges[i][0] = -1; edges[i][1] = -1; }
     for (int i = 0; i < n; i++){
-        fout << "      {\n        \"id\": " << i << ",\n        \"edge_ids\": [";
+        fout << "     {\n        \"id\": " << i << ",\n        \"edge_ids\": [";
         bool first_semicolon = 1;
         for (int j = 0; j < n; j++){
             if (graph[i][j] != -1){
@@ -80,17 +79,28 @@ int main(){
                 edges[graph[i][j]][1] = j;
             }
         }
-        fout << "]\n      }, ";
+        if (i == n - 1){
+            fout << "]\n      }\n ";
+        }
+        else{
+            fout << "]\n      },\n ";
+        }
     }
-    fout << "\n        \"...\"\n    ],\n";
+    fout << "        \n    ],\n";
 
 
-    fout << "    \"edges\": [";
+    fout << "\n    \"edges\": [\n";
     for (int i = 0; i < m; i++) {
-        fout << "      {\n        \"id\": " << i << ",\n        \"vertex_ids\": ["
-            << edges[i][0] << ", " << edges[i][1] << "]\n      }, ";
+        if (i == m - 1){
+            fout << "      {\n        \"id\": " << i << ",\n        \"vertex_ids\": ["
+                << edges[i][0] << ", " << edges[i][1] << "]\n      } \n";
+        }
+        else{
+            fout << "      {\n        \"id\": " << i << ",\n        \"vertex_ids\": ["
+                << edges[i][0] << ", " << edges[i][1] << "]\n      }, \n";
+        }
     }
-    fout << "\n        \"...\"\n    ]\n}\n\n";
+    fout << "        \n    ]\n}\n\n";
     fout.close();
     return 0;
 }
