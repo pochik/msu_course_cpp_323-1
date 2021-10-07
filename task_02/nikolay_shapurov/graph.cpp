@@ -7,16 +7,16 @@ class Graph{
 public:
 
    int num_vertices, num_edges;
-   std::vector<std::vector<int>> gr;
+   std::vector<std::vector<int>> data;
 
    Graph(int num_v, int num_e){
        num_vertices = num_v;
        num_edges = num_e;
        for (int i = 0; i < num_v; i++){
            std::vector<int> temp;
-           gr.push_back(temp);
+           data.push_back(temp);
            for (int j = 0; j < num_v; j++){
-               gr[i].push_back(-1);
+               data[i].push_back(-1);
            }
        }
    }
@@ -33,7 +33,7 @@ public:
            if (visited[now] == 1) continue;
            visited[now] = 1;
            for (int i = 0; i < num_vertices; i++){
-               if (gr[now][i] != -1){
+               if (data[now][i] != -1){
                    stack.push_back(i);
                }
            }
@@ -48,7 +48,7 @@ public:
    void print(){
        for (int i = 0; i < num_vertices; i++){
            for (int j = 0; j < num_vertices; j++){
-               std::cout << gr[i][j] << " ";
+               std::cout << data[i][j] << " ";
            }
            std::cout << std::endl;
        }
@@ -58,83 +58,83 @@ public:
 
 int main(){
 
-    Graph G = Graph(14, 17);
-    G.print();
+    Graph MyGraph = Graph(14, 17);
+    MyGraph.print();
 
-    G.gr[0][1] = 0;
-    G.gr[0][2] = 1;
-    G.gr[0][3] = 2;
+    MyGraph.data[0][1] = 0;
+    MyGraph.data[0][2] = 1;
+    MyGraph.data[0][3] = 2;
     
-    G.gr[1][0] = 0;
-    G.gr[1][4] = 3;
-    G.gr[1][5] = 4;
-    G.gr[1][6] = 5;
+    MyGraph.data[1][0] = 0;
+    MyGraph.data[1][4] = 3;
+    MyGraph.data[1][5] = 4;
+    MyGraph.data[1][6] = 5;
 
-    G.gr[2][0] = 1;
-    G.gr[2][7] = 6;
-    G.gr[2][8] = 7;
+    MyGraph.data[2][0] = 1;
+    MyGraph.data[2][7] = 6;
+    MyGraph.data[2][8] = 7;
 
-    G.gr[3][0] = 2;
-    G.gr[3][9] = 8;
+    MyGraph.data[3][0] = 2;
+    MyGraph.data[3][9] = 8;
 
-    G.gr[4][1] = 3;
-    G.gr[4][10] = 9;
+    MyGraph.data[4][1] = 3;
+    MyGraph.data[4][10] = 9;
 
-    G.gr[5][1] = 4;
-    G.gr[5][10] = 10;
+    MyGraph.data[5][1] = 4;
+    MyGraph.data[5][10] = 10;
 
-    G.gr[6][1] = 5;
-    G.gr[6][10] = 11;
+    MyGraph.data[6][1] = 5;
+    MyGraph.data[6][10] = 11;
 
-    G.gr[7][2] = 6;
-    G.gr[7][11] = 12;
+    MyGraph.data[7][2] = 6;
+    MyGraph.data[7][11] = 12;
 
-    G.gr[8][2] = 7;
-    G.gr[8][11] = 13;
+    MyGraph.data[8][2] = 7;
+    MyGraph.data[8][11] = 13;
 
-    G.gr[9][3] = 8;
-    G.gr[9][12] = 14;
+    MyGraph.data[9][3] = 8;
+    MyGraph.data[9][12] = 14;
 
-    G.gr[10][4] = 9;
-    G.gr[10][5] = 10;
-    G.gr[10][6] = 11;
-    G.gr[10][13] = 15;
+    MyGraph.data[10][4] = 9;
+    MyGraph.data[10][5] = 10;
+    MyGraph.data[10][6] = 11;
+    MyGraph.data[10][13] = 15;
 
-    G.gr[11][7] = 12;
-    G.gr[11][8] = 13;
-    G.gr[11][13] = 16;
+    MyGraph.data[11][7] = 12;
+    MyGraph.data[11][8] = 13;
+    MyGraph.data[11][13] = 16;
 
-    G.gr[12][9] = 14;
-    G.gr[12][13] = 17;
+    MyGraph.data[12][9] = 14;
+    MyGraph.data[12][13] = 17;
 
-    G.gr[13][10] = 15;
-    G.gr[13][11] = 16;
-    G.gr[13][12] = 17;
-   
-    std::cout << G.DNS() << std::endl;
+    MyGraph.data[13][10] = 15;
+    MyGraph.data[13][11] = 16;
+    MyGraph.data[13][12] = 17;
+
+    if (MyGraph.DNS() != 1) std::cout << "disconnected graph\n";
 
     std::ofstream fout;
     fout.open("output.json");
 
     fout << "{\n    \"vertices\": [\n";
-    int edges[G.num_edges][2];
-    for (int i = 0; i < G.num_vertices; i++){
+    int edges[MyGraph.num_edges][2];
+    for (int i = 0; i < MyGraph.num_vertices; i++){
         fout << "     {\n        \"id\": " << i << ",\n        \"edge_ids\": [";
         bool first_semicolon = 1;
-        for (int j = 0; j < G.num_vertices; j++){
-            if (G.gr[i][j] != -1){
+        for (int j = 0; j < MyGraph.num_vertices; j++){
+            if (MyGraph.data[i][j] != -1){
                 if (first_semicolon == 0){
-                    fout << ", " << G.gr[i][j];
+                    fout << ", " << MyGraph.data[i][j];
                 }
                 else{
                     first_semicolon = 0;
-                    fout << G.gr[i][j];
+                    fout << MyGraph.data[i][j];
                 }
-                edges[G.gr[i][j]][0] = i;
-                edges[G.gr[i][j]][1] = j;
+                edges[MyGraph.data[i][j]][0] = i;
+                edges[MyGraph.data[i][j]][1] = j;
             }
         }
-        if (i == G.num_vertices - 1){
+        if (i == MyGraph.num_vertices - 1){
             fout << "]\n      }\n ";
         }
         else{
@@ -145,8 +145,8 @@ int main(){
 
 
     fout << "\n    \"edges\": [\n";
-    for (int i = 0; i < G.num_edges; i++) {
-        if (i == G.num_edges - 1){
+    for (int i = 0; i < MyGraph.num_edges; i++) {
+        if (i == MyGraph.num_edges - 1){
             fout << "      {\n        \"id\": " << i << ",\n        \"vertex_ids\": ["
                 << edges[i][0] << ", " << edges[i][1] << "]\n      } \n";
         }
